@@ -1,0 +1,14 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Segoe UI", sans-serif;
+    min-height: 100vh;
+    background-color: black;
+    overflow: hidden;
+    font-family: Consolas, monospace;
+    color: white;
+}

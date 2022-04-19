@@ -1,0 +1,8 @@
+#scoreDisplay {
+    position: fixed;
+    top: 10px;
+    left: 15px;
+    font-size: 20px;
+    z-index: 30;
+    opacity: 0.7;
+}

@@ -1,0 +1,19 @@
+canvas {
+    position: absolute;
+}
+
+#starCanvas1 {
+    z-index: 1;
+}
+
+#starCanvas2 {
+    z-index: 2;
+}
+
+#starCanvas3 {
+    z-index: 3;
+}
+
+#entityCanvas {
+    z-index: 10;
+}
