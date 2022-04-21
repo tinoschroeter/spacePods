@@ -4,15 +4,15 @@
     background: linear-gradient(
             to bottom,
             black,
-            transparent 15%,
-            transparent 85%,
+            transparent 2%,
+            transparent 98%,
             black
         ),
         linear-gradient(
             to right,
             black,
-            transparent 10%,
-            transparent 90%,
+            transparent 2%,
+            transparent 98%,
             black
         );
     z-index: 20;

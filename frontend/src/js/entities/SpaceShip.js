@@ -1,6 +1,7 @@
 import { canvas, ctx } from "../canvas.js";
 import { IMAGE } from "../images.js";
 import { Lazer } from "./Lazer.js";
+import { Pod } from "./Pod.js";
 
 export class SpaceShip {
   constructor() {
@@ -13,14 +14,14 @@ export class SpaceShip {
     };
     this.vel = { x: 0.6, y: 0 };
     this.force = { x: 0, y: 0 };
-    this.maximalForce = 0.6;
-    this.friction = 0.99;
+    this.maximalForce = 0.48;
+    this.friction = 0.98;
 
     this.rotation = 0;
     this.rotationVel = 0;
     this.rotationForce = 0;
-    this.rotationMaximalForce = 0.01;
-    this.rotationFriction = 0.95;
+    this.rotationMaximalForce = 0.07;
+    this.rotationFriction = 0.01;
 
     this.status = "idle";
     this.frames = {
@@ -36,8 +37,8 @@ export class SpaceShip {
     this.alpha = 1;
 
     this.scoreDisplay = document.getElementById("scoreDisplay");
+    this.podDisplay = document.getElementById("podDisplay");
     this.scoreDisplayEnd = document.getElementById("scoreDisplayEnd");
-
     this.addControls();
   }
 
@@ -79,8 +80,8 @@ export class SpaceShip {
   }
 
   boundToCanvas() {
-    this.pos.x = Math.max(0, Math.min(canvas.entity.width, this.pos.x));
-    this.pos.y = Math.max(0, Math.min(canvas.entity.height, this.pos.y));
+    this.pos.x = Math.max(10, Math.min(canvas.entity.width, this.pos.x));
+    this.pos.y = Math.max(10, Math.min(canvas.entity.height, this.pos.y));
   }
 
   draw() {
@@ -106,6 +107,13 @@ export class SpaceShip {
   showScore() {
     this.scoreDisplay.innerText = `Score: ${this.score}`;
     this.scoreDisplayEnd.innerText = `Score: ${this.score}`;
+  }
+
+  showPods() {
+    const show = () =>
+      (this.podDisplay.innerText = Pod.count ? `Pods:  ${Pod.count}` : `Pods:  0`);
+    show();
+    setInterval(() => show(), 1000);
   }
 
   addControls() {

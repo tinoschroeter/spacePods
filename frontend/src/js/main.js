@@ -1,4 +1,4 @@
-import { Pods } from "./entities/Pods.js";
+import { Pod } from "./entities/Pod.js";
 import { Lazer } from "./entities/Lazer.js";
 import { SpaceShip } from "./entities/SpaceShip.js";
 import { clearCanvas, makeCanvasesFullScreen } from "./canvas.js";
@@ -25,17 +25,18 @@ preloadImages(() => {
     if (e.key == "Enter") {
       if (ship.destroyed) {
         hideScreen();
-        Pods.removeAll();
+        Pod.removeAll();
         ship.reset();
       } else if (gameRunning) {
         showScreen("pause");
         gameRunning = false;
-        Pods.stopGenerating();
+        Pod.stopGenerating();
       } else if (!gameRunning) {
         hideScreen();
         gameRunning = true;
-        Pods.startGenerating();
+        Pod.startGenerating();
         ship.showScore();
+        ship.showPods();
         gameLoop();
       }
     }
@@ -52,10 +53,10 @@ preloadImages(() => {
 
   function gameLoop() {
     clearCanvas("entity");
-    [...Lazer.list, ...Pods.list, ship, stars].forEach((obj) =>
+    [...Lazer.list, ...Pod.list, ship, stars].forEach((obj) =>
       obj.update(ship)
     );
-    [...Lazer.list, ...Pods.list, ship].forEach((obj) => obj.draw());
+    [...Lazer.list, ...Pod.list, ship].forEach((obj) => obj.draw());
     if (gameRunning) requestAnimationFrame(gameLoop);
   }
 });

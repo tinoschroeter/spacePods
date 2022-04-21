@@ -6,20 +6,21 @@ import { showScreen } from "../screens.js";
 export class Pod {
   static list = [];
 
+  static counts = 0;
+
+  static api = "http://localhost:3000/api/pods";
+
   static SIZE = {
-    s: 32,
     m: 64,
     l: 128,
   };
 
   static FRAME_COUNT = {
-    s: 60,
     m: 60,
     l: 120,
   };
 
   static SCORE = {
-    s: 5,
     m: 2,
     l: 1,
   };
@@ -30,16 +31,27 @@ export class Pod {
     Pod.list = [];
   }
 
-  static startGenerating(frequency = 300) {
-    Pod.interval = setInterval(() => new Pod(), frequency);
+  static startGenerating(frequency = 1000) {
+    Pod.interval = setInterval(() => {
+      fetch(Pod.api)
+        .then((res) => res.json())
+        .then((data) => {
+          Pod.count = data.length;
+          data.forEach((item) => new Pod(item.name));
+        })
+        .catch((e) => console.error(e));
+    }, frequency);
   }
 
   static stopGenerating() {
     clearInterval(Pod.interval);
   }
 
-  constructor() {
-    this.type = randEl(["s", "l", "m"]);
+  constructor(podName) {
+    if (Pod.list.find((item) => item.podName === podName)) return;
+
+    this.podName = podName;
+    this.type = randEl(["l", "m"]);
     const name = "asteroid-" + this.type;
     this.image = IMAGE[name];
 
@@ -53,28 +65,28 @@ export class Pod {
           x: -this.size / 2,
           y: randInt(0, canvas.star1.height),
         };
-        this.vel = { x: randInt(1, 4), y: randInt(-4, 5) };
+        this.vel = { x: randInt(1, 3), y: randInt(-2, 4) };
         break;
       case "right":
         this.pos = {
           x: canvas.star1.width + this.size / 2,
           y: randInt(0, canvas.star1.height),
         };
-        this.vel = { x: -randInt(1, 4), y: randInt(-4, 5) };
+        this.vel = { x: -randInt(1, 3), y: randInt(-2, 4) };
         break;
       case "top":
         this.pos = {
           x: randInt(0, canvas.star1.width),
           y: -this.size / 2,
         };
-        this.vel = { x: randInt(-4, 5), y: randInt(1, 4) };
+        this.vel = { x: randInt(-2, 4), y: randInt(1, 3) };
         break;
       case "bottom":
         this.pos = {
           x: randInt(0, canvas.star1.width),
           y: canvas.star1.height + this.size / 2,
         };
-        this.vel = { x: randInt(-4, 5), y: -randInt(1, 4) };
+        this.vel = { x: randInt(-2, 4), y: -randInt(1, 3) };
         break;
     }
     this.animationTimer = 0;
@@ -99,14 +111,16 @@ export class Pod {
       this.vel = { x: 0, y: 0 };
       this.size *= 0.8;
       if (this.size <= 1) {
-        this.remove();
+        this.destroy();
       }
     }
     //this.destroyShip(ship);
-    //this.removeIfOutside();
+    this.removeIfOutside();
   }
 
   draw() {
+    //console.log(Pod.list)
+    //console.log(`x: ${this.pos.x} y: ${this.pos.y}`)
     ctx.entity.save();
     ctx.entity.translate(this.drawPos.x, this.drawPos.y);
     ctx.entity.drawImage(
@@ -120,6 +134,12 @@ export class Pod {
       this.size,
       this.size
     );
+
+    ctx.entity.fillStyle = "#FFA500";
+    ctx.entity.font = "18px serif";
+    ctx.entity.textAlign = "center";
+    ctx.entity.fillText(this.podName, 0, 0);
+
     ctx.entity.restore();
   }
   removeIfOutside() {
@@ -129,12 +149,23 @@ export class Pod {
       this.pos.x > canvas.star1.width + this.size / 2 ||
       this.pos.y > canvas.star1.height + this.size / 2
     ) {
+      //console.log("Remove: ", this)
       this.remove();
     }
   }
 
   remove() {
     Pod.list = Pod.list.filter((a) => a != this);
+  }
+
+  destroy() {
+    fetch(`${Pod.api}/${this.podName}`, {
+      method: "DELETE",
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((e) => console.error(e));
+    this.remove();
   }
 
   destroyShip(ship) {

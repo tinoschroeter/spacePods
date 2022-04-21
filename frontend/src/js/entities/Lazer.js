@@ -31,7 +31,7 @@ export class Lazer {
   update(ship) {
     this.pos.x += this.vel.x;
     this.pos.y += this.vel.y;
-    this.destroyPods(ship);
+    this.destroyPod(ship);
     this.removeIfOutside();
   }
 
@@ -50,7 +50,7 @@ export class Lazer {
     Lazer.list = Lazer.list.filter((l) => l != this);
   }
 
-  destroyPods(ship) {
+  destroyPod(ship) {
     Pod.list.forEach((asteroid) => {
       if (distance(this.pos, asteroid.drawPos) < asteroid.size / 2) {
         asteroid.destroyed = true;

@@ -5,7 +5,7 @@ export class Stars {
   constructor() {
     this.sizes = ["1", "2", "3"];
     this.list = { 1: [], 2: [], 3: [] };
-    this.number = { 1: 7000, 2: 1000, 3: 700 };
+    this.number = { 1: 3000, 2: 1000, 3: 700 };
     this.parallax = { 1: 0.75, 2: 0.8, 3: 0.85 };
     this.alpha = { 1: 0.5, 2: 0.7, 3: 0.8 };
     this.color = "rgb(200, 179, 79)";
