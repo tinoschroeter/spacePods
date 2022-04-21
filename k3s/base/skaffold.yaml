@@ -1,0 +1,14 @@
+apiVersion: skaffold/v1
+kind: Config
+build:
+  artifacts:
+  - image: registry.tino.sh/spacePods-backend
+    context: ../../
+    docker:
+      target: backend
+  - image: registry.tino.sh/spacePods-frontend
+    context: ../../
+    docker:
+      target: frontend
+deploy:
+  kustomize: {}

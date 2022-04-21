@@ -1,5 +1,6 @@
 #scoreDisplay {
     position: fixed;
+    color: #FFA500;
     top: 10px;
     left: 15px;
     font-size: 20px;

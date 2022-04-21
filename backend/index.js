@@ -1,8 +1,10 @@
 const express = require("express");
+const morgan = require("morgan");
 const app = express();
 const cors = require("cors");
 
-app.use(cors())
+app.use(morgan("combined"));
+app.use(cors());
 
 let liste = [
   { name: "web-host-547dcu815-2d1ha" },

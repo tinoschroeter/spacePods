@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spacepods-frontend
+  name: spacepods-frontend
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: spacepods-frontend
+  template:
+    metadata:
+      labels:
+        app: spacepods-frontend
+    spec:
+      containers:
+      - name: spacepods-frontend
+        image: registry.tino.sh/spacePods-frontend
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "30m"
+          limits:
+            memory: "64Mi"
+            cpu: "100m"

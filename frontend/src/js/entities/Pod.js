@@ -8,7 +8,7 @@ export class Pod {
 
   static counts = 0;
 
-  static api = "http://localhost:3000/api/pods";
+  static api = "/api/pods";
 
   static SIZE = {
     m: 64,
@@ -21,7 +21,7 @@ export class Pod {
   };
 
   static SCORE = {
-    m: 2,
+    m: 1,
     l: 1,
   };
 

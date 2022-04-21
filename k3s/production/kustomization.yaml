@@ -1,0 +1,4 @@
+namespace: spacepods
+bases:
+  - ../base
+  - ingress.yaml

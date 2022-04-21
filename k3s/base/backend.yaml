@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: spacepods-backend
+  name: spacepods-backend
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      app: spacepods-backend
+  template:
+    metadata:
+      labels:
+        app: spacepods-backend
+    spec:
+      containers:
+      - name: spacepods-backend
+        image: registry.tino.sh/spacePods-backend
+        resources:
+          requests:
+            memory: "50Mi"
+            cpu: "30m"
+          limits:
+            memory: "64Mi"
+            cpu: "100m"

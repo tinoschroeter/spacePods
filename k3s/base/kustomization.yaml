@@ -1,0 +1,8 @@
+namespace: spacepods
+resources:
+  - api-clusterRole.yaml
+  - api-RoleBinding.yaml
+  - api-sa.yaml
+  - service.yml
+  - frontend.yaml
+  - backend.yaml

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spacepods-frontend-service
+  name: spacepods-frontend-service
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: spacepods-frontend
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: spacepods-backend-service
+  name: spacepods-backend-service
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: spacepods-backend
