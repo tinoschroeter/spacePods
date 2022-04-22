@@ -1,2 +1,535 @@
-(()=>{var C=Object.defineProperty;var M=(i,t,s)=>t in i?C(i,t,{enumerable:!0,configurable:!0,writable:!0,value:s}):i[t]=s;var l=(i,t,s)=>(M(i,typeof t!="symbol"?t+"":t,s),s);var e={entity:document.getElementById("entityCanvas"),star1:document.getElementById("starCanvas1"),star2:document.getElementById("starCanvas2"),star3:document.getElementById("starCanvas3")},o={entity:e.entity.getContext("2d"),star1:e.star1.getContext("2d"),star2:e.star2.getContext("2d"),star3:e.star3.getContext("2d")};function f(i,t=1){i.width=t*window.innerWidth,i.height=t*window.innerHeight}function b(){f(e.entity),f(e.star1,2),f(e.star2,2),f(e.star3,2)}function x(i){o[i].clearRect(0,0,e[i].width,e[i].height)}function I(i,t){let s;return(...r)=>{s&&clearTimeout(s),s=setTimeout(()=>{i(...r)},t)}}function n(i,t){return i+Math.floor((t-i)*Math.random())}function u(i){return i[n(0,i.length)]}function w(i,t){return Math.sqrt(Math.pow(i.x-t.x,2)+Math.pow(i.y-t.y,2))}var y={},z=["ship","asteroid-l","asteroid-m","asteroid-s"];function S(i){function t(s){if(s<z.length){let r=new Image;r.onload=()=>{t(s+1)},y[z[s]]=r,r.src=`./img/${z[s]}.png`}else i()}t(0)}var A=document.querySelectorAll(".screen");function v(){A.forEach(i=>i.classList.remove("visible"))}function p(i){v(),document.getElementById(`${i}Screen`).classList.add("visible")}var h=class{static removeAll(){h.list=[]}static startGenerating(t=1e3){h.interval=setInterval(()=>{fetch(h.api).then(s=>s.json()).then(s=>{h.count=s.length,s.forEach(r=>new h(r.name))}).catch(s=>console.error(s))},t)}static stopGenerating(){clearInterval(h.interval)}constructor(t){if(h.list.find(c=>c.podName===t))return;this.podName=t,this.type=u(["l","m"]);let s="asteroid-"+this.type;switch(this.image=y[s],this.size=h.SIZE[this.type],u(["left","right","top","bottom"])){case"left":this.pos={x:-this.size/2,y:n(0,e.star1.height)},this.vel={x:n(1,3),y:n(-2,4)};break;case"right":this.pos={x:e.star1.width+this.size/2,y:n(0,e.star1.height)},this.vel={x:-n(1,3),y:n(-2,4)};break;case"top":this.pos={x:n(0,e.star1.width),y:-this.size/2},this.vel={x:n(-2,4),y:n(1,3)};break;case"bottom":this.pos={x:n(0,e.star1.width),y:e.star1.height+this.size/2},this.vel={x:n(-2,4),y:-n(1,3)};break}this.animationTimer=0,this.frameCount=h.FRAME_COUNT[this.type],this.parallax=1,this.drawPos={x:0,y:0},this.destroyed=!1,this.score=h.SCORE[this.type],h.list.push(this)}update(t){this.animationTimer++,this.animationTimer>=this.frameCount&&(this.animationTimer=0),this.pos.x+=this.vel.x,this.pos.y+=this.vel.y,this.drawPos={x:this.pos.x-this.parallax*t.pos.x,y:this.pos.y-this.parallax*t.pos.y},this.destroyed&&(this.vel={x:0,y:0},this.size*=.8,this.size<=1&&this.destroy()),this.removeIfOutside()}draw(){o.entity.save(),o.entity.translate(this.drawPos.x,this.drawPos.y),o.entity.drawImage(this.image,this.animationTimer*h.SIZE[this.type],0,h.SIZE[this.type],h.SIZE[this.type],-this.size/2,-this.size/2,this.size,this.size),o.entity.fillStyle="#FFA500",o.entity.font="18px serif",o.entity.textAlign="center",o.entity.fillText(this.podName,0,0),o.entity.restore()}removeIfOutside(){(this.pos.x+this.size/2<0||this.pos.y+this.size/2<0||this.pos.x>e.star1.width+this.size/2||this.pos.y>e.star1.height+this.size/2)&&this.remove()}remove(){h.list=h.list.filter(t=>t!=this)}destroy(){fetch(`${h.api}/${this.podName}`,{method:"DELETE"}).then(t=>t.json()).then(t=>console.log(t)).catch(t=>console.error(t)),this.remove()}destroyShip(t){!t.destroyed&&w(t.pos,this.drawPos)<t.size.x/2+this.size/2&&(t.destroyed=!0,t.rotationForce=u([1,-1])*.2,p("gameover"))}},a=h;l(a,"list",[]),l(a,"counts",0),l(a,"api","/api/pods"),l(a,"SIZE",{m:64,l:128}),l(a,"FRAME_COUNT",{m:60,l:120}),l(a,"SCORE",{m:1,l:1}),l(a,"interval",null);var m=class{constructor({pos:t,initialVel:s,rotation:r}){this.pos=t,this.rotation=r,this.speed=15,this.vel={x:s.x+this.speed*Math.cos(r),y:s.y+this.speed*Math.sin(r)},m.list.push(this)}draw(){o.entity.save(),o.entity.fillStyle="green",o.entity.globalAlpha=.8,o.entity.translate(this.pos.x,this.pos.y),o.entity.rotate(this.rotation),o.entity.fillRect(0,-2,40,4),o.entity.fillStyle="white",o.entity.fillRect(0,-.5,40,1),o.entity.restore()}update(t){this.pos.x+=this.vel.x,this.pos.y+=this.vel.y,this.destroyPod(t),this.removeIfOutside()}removeIfOutside(){(this.pos.x<0||this.pos.x>e.star1.width||this.pos.y<0||this.pos.y>e.star1.height)&&this.remove()}remove(){m.list=m.list.filter(t=>t!=this)}destroyPod(t){a.list.forEach(s=>{w(this.pos,s.drawPos)<s.size/2&&(s.destroyed=!0,t.score+=s.score,t.showScore(),this.remove())})}},d=m;l(d,"list",[]);var g=class{constructor(){this.image=y.ship,this.size={x:100,y:100},this.pos={x:e.entity.width/2,y:e.entity.height/2},this.vel={x:.6,y:0},this.force={x:0,y:0},this.maximalForce=.48,this.friction=.98,this.rotation=0,this.rotationVel=0,this.rotationForce=0,this.rotationMaximalForce=.07,this.rotationFriction=.01,this.status="idle",this.frames={idle:0,boost_forwards:1,boost_backwards:2,turn_right:3,turn_left:4},this.destroyed=!1,this.score=0,this.alpha=1,this.scoreDisplay=document.getElementById("scoreDisplay"),this.podDisplay=document.getElementById("podDisplay"),this.scoreDisplayEnd=document.getElementById("scoreDisplayEnd"),this.addControls()}update(){this.vel.x+=this.force.x,this.vel.y+=this.force.y,this.force.x=0,this.force.y=0,this.pos.x+=this.vel.x,this.pos.y+=this.vel.y,this.vel.x*=this.friction,this.vel.y*=this.friction,this.rotationVel+=this.rotationForce,this.rotationForce=0,this.rotation+=this.rotationVel,this.rotationVel*=this.rotationFriction,this.destroyed&&(this.alpha*=.95,this.alpha<=.01&&(this.alpha=0)),this.handleTinyVel(),this.boundToCanvas()}handleTinyVel(t=.01){Math.abs(this.vel.x)<t&&(this.vel.x=0),Math.abs(this.vel.y)<t&&(this.vel.y=0),Math.abs(this.rotationVel)<t&&(this.rotationVel=0)}boundToCanvas(){this.pos.x=Math.max(10,Math.min(e.entity.width,this.pos.x)),this.pos.y=Math.max(10,Math.min(e.entity.height,this.pos.y))}draw(){o.entity.save(),o.entity.globalAlpha=this.alpha,o.entity.translate(this.pos.x,this.pos.y),o.entity.rotate(this.rotation),o.entity.drawImage(this.image,this.frames[this.status]*this.size.x,0,this.size.x,this.size.y,-this.size.x/2,-this.size.y/2,this.size.x,this.size.y),o.entity.restore()}showScore(){this.scoreDisplay.innerText=`Kill: ${this.score}`,this.scoreDisplayEnd.innerText=`Kill: ${this.score}`}showPods(){let t=()=>this.podDisplay.innerText=a.count?`Pods:  ${a.count}`:"Pods:  0";t(),setInterval(()=>t(),1e3)}addControls(){window.addEventListener("keydown",t=>{switch(t.key){case"ArrowUp":this.boost({direction:"forwards"});break;case"ArrowDown":this.boost({direction:"backwards"});break;case"ArrowLeft":this.turn({direction:"left"});break;case"ArrowRight":this.turn({direction:"right"});break;case" ":this.shoot();break}}),window.addEventListener("keyup",t=>{["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"].includes(t.key)&&(this.status="idle")})}shoot(){this.destroyed||new d({pos:{...this.pos},initialVel:{...this.vel},rotation:this.rotation})}turn({direction:t}){if(this.destroyed)return;this.status=`turn_${t}`;let s=t=="right"?1:-1;this.rotationForce=s*this.rotationMaximalForce}boost({direction:t}){if(this.destroyed)return;this.status=`boost_${t}`;let s=t=="forwards"?1:-1;this.force={x:s*this.maximalForce*Math.cos(this.rotation),y:s*this.maximalForce*Math.sin(this.rotation)}}reset(){this.score=0,this.showScore(),this.destroyed=!1,this.status="idle",this.rotation=0,this.rotationVel=0,this.vel={x:0,y:0},this.alpha=1}};var E=class{constructor(){this.sizes=["1","2","3"],this.list={1:[],2:[],3:[]},this.number={1:3e3,2:1e3,3:700},this.parallax={1:.75,2:.8,3:.85},this.alpha={1:.5,2:.7,3:.8},this.color="rgb(200, 179, 79)",this.scale=1,this.scaleVel=25e-5,this.updateCanvas({x:e.entity.width/2,y:e.entity.height/2})}generate(){for(let t of this.sizes){this.list[t]=[];for(let s=0;s<this.number[t];s++){let r=n(0,e[`star${t}`].width),c=n(0,e[`star${t}`].height);this.list[t].push({x:r,y:c})}}}draw(){for(let t of this.sizes)x(`star${t}`),o[`star${t}`].fillStyle=this.color,o[`star${t}`].globalAlpha=this.alpha[t],this.list[t].forEach(({x:s,y:r})=>{o[`star${t}`].beginPath(),o[`star${t}`].arc(s,r,t/2,0,2*Math.PI),o[`star${t}`].fill()})}update(t){this.updateCanvas(t.pos),this.updateScale()}updateScale(){this.scale+=this.scaleVel,(this.scale>1.7||this.scale<1)&&(this.scaleVel*=-1)}updateCanvas(t){for(let s of this.sizes){let r={x:-this.parallax[s]*t.x,y:-this.parallax[s]*t.y};e[`star${s}`].style.transform=`translateX(${r.x}px)translateY(${r.y}px)scale(${this.scale})`}}};b();p("loading");S(()=>{p("start");let i=new E,t=new g,s=!1;i.generate(),i.draw(),window.addEventListener("keydown",c=>{c.key=="Enter"&&(t.destroyed?(v(),a.removeAll(),t.reset()):s?(p("pause"),s=!1,a.stopGenerating()):s||(v(),s=!0,a.startGenerating(),t.showScore(),t.showPods(),r()))}),window.addEventListener("resize",I(()=>{b(),i.generate(),i.draw()},150));function r(){x("entity"),[...d.list,...a.list,t,i].forEach(c=>c.update(t)),[...d.list,...a.list,t].forEach(c=>c.draw()),s&&requestAnimationFrame(r)}});})();
+(() => {
+  var __defProp = Object.defineProperty;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __publicField = (obj, key, value) => {
+    __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
+    return value;
+  };
+
+  // src/js/canvas.js
+  var canvas = {
+    entity: document.getElementById("entityCanvas"),
+    star1: document.getElementById("starCanvas1"),
+    star2: document.getElementById("starCanvas2"),
+    star3: document.getElementById("starCanvas3")
+  };
+  var ctx = {
+    entity: canvas.entity.getContext("2d"),
+    star1: canvas.star1.getContext("2d"),
+    star2: canvas.star2.getContext("2d"),
+    star3: canvas.star3.getContext("2d")
+  };
+  function makeCanvasFullScreen(canv, factor = 1) {
+    canv.width = factor * window.innerWidth;
+    canv.height = factor * window.innerHeight;
+  }
+  function makeCanvasesFullScreen() {
+    makeCanvasFullScreen(canvas.entity);
+    makeCanvasFullScreen(canvas.star1, 2);
+    makeCanvasFullScreen(canvas.star2, 2);
+    makeCanvasFullScreen(canvas.star3, 2);
+  }
+  function clearCanvas(key) {
+    ctx[key].clearRect(0, 0, canvas[key].width, canvas[key].height);
+  }
+
+  // src/js/helper.js
+  function debounce(fn, delay) {
+    let id;
+    return (...args) => {
+      if (id)
+        clearTimeout(id);
+      id = setTimeout(() => {
+        fn(...args);
+      }, delay);
+    };
+  }
+  function randInt(a, b) {
+    return a + Math.floor((b - a) * Math.random());
+  }
+  function randEl(list) {
+    return list[randInt(0, list.length)];
+  }
+  function distance(u, v) {
+    return Math.sqrt(Math.pow(u.x - v.x, 2) + Math.pow(u.y - v.y, 2));
+  }
+
+  // src/js/images.js
+  var IMAGE = {};
+  var names = ["ship", "asteroid-l", "asteroid-m", "asteroid-s"];
+  function preloadImages(callbackFunction) {
+    function preloadImage(i) {
+      if (i < names.length) {
+        const img = new Image();
+        img.onload = () => {
+          preloadImage(i + 1);
+        };
+        IMAGE[names[i]] = img;
+        img.src = `./img/${names[i]}.png`;
+      } else {
+        callbackFunction();
+      }
+    }
+    preloadImage(0);
+  }
+
+  // src/js/screens.js
+  var screens = document.querySelectorAll(".screen");
+  function hideScreen() {
+    screens.forEach((screen) => screen.classList.remove("visible"));
+  }
+  function showScreen(name) {
+    hideScreen();
+    document.getElementById(`${name}Screen`).classList.add("visible");
+  }
+
+  // src/js/entities/Pod.js
+  var _Pod = class {
+    static removeAll() {
+      _Pod.list = [];
+    }
+    static startGenerating(frequency = 1e3) {
+      _Pod.interval = setInterval(() => {
+        fetch(_Pod.api).then((res) => res.json()).then((data) => {
+          _Pod.count = data.length;
+          data.forEach((item) => new _Pod(item.name));
+        }).catch((e) => {
+          _Pod.errorScore++;
+          console.error(e);
+        });
+      }, frequency);
+    }
+    static stopGenerating() {
+      clearInterval(_Pod.interval);
+    }
+    constructor(podName) {
+      if (_Pod.list.find((item) => item.podName === podName))
+        return;
+      this.podName = podName;
+      this.type = randEl(["l", "m"]);
+      const name = "asteroid-" + this.type;
+      this.image = IMAGE[name];
+      this.size = _Pod.SIZE[this.type];
+      const startSide = randEl(["left", "right", "top", "bottom"]);
+      switch (startSide) {
+        case "left":
+          this.pos = {
+            x: -this.size / 2,
+            y: randInt(0, canvas.star1.height)
+          };
+          this.vel = { x: randInt(1, 3), y: randInt(-2, 4) };
+          break;
+        case "right":
+          this.pos = {
+            x: canvas.star1.width + this.size / 2,
+            y: randInt(0, canvas.star1.height)
+          };
+          this.vel = { x: -randInt(1, 3), y: randInt(-2, 4) };
+          break;
+        case "top":
+          this.pos = {
+            x: randInt(0, canvas.star1.width),
+            y: -this.size / 2
+          };
+          this.vel = { x: randInt(-2, 4), y: randInt(1, 3) };
+          break;
+        case "bottom":
+          this.pos = {
+            x: randInt(0, canvas.star1.width),
+            y: canvas.star1.height + this.size / 2
+          };
+          this.vel = { x: randInt(-2, 4), y: -randInt(1, 3) };
+          break;
+      }
+      this.animationTimer = 0;
+      this.frameCount = _Pod.FRAME_COUNT[this.type];
+      this.parallax = 1;
+      this.drawPos = { x: 0, y: 0 };
+      this.destroyed = false;
+      this.score = _Pod.SCORE[this.type];
+      _Pod.list.push(this);
+    }
+    update(ship) {
+      this.animationTimer++;
+      if (this.animationTimer >= this.frameCount)
+        this.animationTimer = 0;
+      this.pos.x += this.vel.x;
+      this.pos.y += this.vel.y;
+      this.drawPos = {
+        x: this.pos.x - this.parallax * ship.pos.x,
+        y: this.pos.y - this.parallax * ship.pos.y
+      };
+      if (this.destroyed) {
+        this.vel = { x: 0, y: 0 };
+        this.size *= 0.8;
+        if (this.size <= 1) {
+          this.destroy();
+        }
+      }
+      this.removeIfOutside();
+    }
+    draw() {
+      ctx.entity.save();
+      ctx.entity.translate(this.drawPos.x, this.drawPos.y);
+      ctx.entity.drawImage(this.image, this.animationTimer * _Pod.SIZE[this.type], 0, _Pod.SIZE[this.type], _Pod.SIZE[this.type], -this.size / 2, -this.size / 2, this.size, this.size);
+      ctx.entity.fillStyle = "#FFA500";
+      ctx.entity.font = "18px serif";
+      ctx.entity.textAlign = "center";
+      ctx.entity.fillText(this.podName, 0, 0);
+      ctx.entity.restore();
+    }
+    removeIfOutside() {
+      if (this.pos.x + this.size / 2 < 0 || this.pos.y + this.size / 2 < 0 || this.pos.x > canvas.star1.width + this.size / 2 || this.pos.y > canvas.star1.height + this.size / 2) {
+        this.remove();
+      }
+    }
+    remove() {
+      _Pod.list = _Pod.list.filter((a) => a != this);
+    }
+    destroy() {
+      fetch(`${_Pod.api}/${this.podName}`, {
+        method: "DELETE"
+      }).then((res) => res.json()).then((data) => console.log(data)).catch((e) => {
+        _Pod.errorScore++;
+        console.error(e);
+      });
+      this.remove();
+    }
+    destroyShip(ship) {
+      if (!ship.destroyed && distance(ship.pos, this.drawPos) < ship.size.x / 2 + this.size / 2) {
+        ship.destroyed = true;
+        ship.rotationForce = randEl([1, -1]) * 0.2;
+        showScreen("gameover");
+      }
+    }
+  };
+  var Pod = _Pod;
+  __publicField(Pod, "list", []);
+  __publicField(Pod, "counts", 0);
+  __publicField(Pod, "api", "https://spacepod.tino.sh/api/pods");
+  __publicField(Pod, "SIZE", {
+    m: 64,
+    l: 128
+  });
+  __publicField(Pod, "FRAME_COUNT", {
+    m: 60,
+    l: 120
+  });
+  __publicField(Pod, "SCORE", {
+    m: 1,
+    l: 1
+  });
+  __publicField(Pod, "interval", null);
+  __publicField(Pod, "errorScore", 0);
+
+  // src/js/entities/Lazer.js
+  var _Lazer = class {
+    constructor({ pos, initialVel, rotation }) {
+      this.pos = pos;
+      this.rotation = rotation;
+      this.speed = 15;
+      this.vel = {
+        x: initialVel.x + this.speed * Math.cos(rotation),
+        y: initialVel.y + this.speed * Math.sin(rotation)
+      };
+      _Lazer.list.push(this);
+    }
+    draw() {
+      ctx.entity.save();
+      ctx.entity.fillStyle = "green";
+      ctx.entity.globalAlpha = 0.8;
+      ctx.entity.translate(this.pos.x, this.pos.y);
+      ctx.entity.rotate(this.rotation);
+      ctx.entity.fillRect(0, -2, 40, 4);
+      ctx.entity.fillStyle = "white";
+      ctx.entity.fillRect(0, -0.5, 40, 1);
+      ctx.entity.restore();
+    }
+    update(ship) {
+      this.pos.x += this.vel.x;
+      this.pos.y += this.vel.y;
+      this.destroyPod(ship);
+      this.removeIfOutside();
+    }
+    removeIfOutside() {
+      if (this.pos.x < 0 || this.pos.x > canvas.star1.width || this.pos.y < 0 || this.pos.y > canvas.star1.height) {
+        this.remove();
+      }
+    }
+    remove() {
+      _Lazer.list = _Lazer.list.filter((l) => l != this);
+    }
+    destroyPod(ship) {
+      Pod.list.forEach((asteroid) => {
+        if (distance(this.pos, asteroid.drawPos) < asteroid.size / 2) {
+          asteroid.destroyed = true;
+          ship.score += asteroid.score;
+          ship.showScore();
+          this.remove();
+        }
+      });
+    }
+  };
+  var Lazer = _Lazer;
+  __publicField(Lazer, "list", []);
+
+  // src/js/entities/SpaceShip.js
+  var SpaceShip = class {
+    constructor() {
+      this.image = IMAGE.ship;
+      this.size = { x: 100, y: 100 };
+      this.pos = {
+        x: canvas.entity.width / 2,
+        y: canvas.entity.height / 2
+      };
+      this.vel = { x: 0.6, y: 0 };
+      this.force = { x: 0, y: 0 };
+      this.maximalForce = 0.48;
+      this.friction = 0.98;
+      this.rotation = 0;
+      this.rotationVel = 0;
+      this.rotationForce = 0;
+      this.rotationMaximalForce = 0.07;
+      this.rotationFriction = 0.01;
+      this.status = "idle";
+      this.frames = {
+        idle: 0,
+        boost_forwards: 1,
+        boost_backwards: 2,
+        turn_right: 3,
+        turn_left: 4
+      };
+      this.destroyed = false;
+      this.score = 0;
+      this.alpha = 1;
+      this.scoreDisplay = document.getElementById("scoreDisplay");
+      this.podDisplay = document.getElementById("podDisplay");
+      this.scoreDisplayEnd = document.getElementById("scoreDisplayEnd");
+      this.errorScore = document.getElementById("errorScore");
+      this.addControls();
+    }
+    update() {
+      this.vel.x += this.force.x;
+      this.vel.y += this.force.y;
+      this.force.x = 0;
+      this.force.y = 0;
+      this.pos.x += this.vel.x;
+      this.pos.y += this.vel.y;
+      this.vel.x *= this.friction;
+      this.vel.y *= this.friction;
+      this.rotationVel += this.rotationForce;
+      this.rotationForce = 0;
+      this.rotation += this.rotationVel;
+      this.rotationVel *= this.rotationFriction;
+      if (this.destroyed) {
+        this.alpha *= 0.95;
+        if (this.alpha <= 0.01)
+          this.alpha = 0;
+      }
+      this.handleTinyVel();
+      this.boundToCanvas();
+    }
+    handleTinyVel(threshold = 0.01) {
+      if (Math.abs(this.vel.x) < threshold) {
+        this.vel.x = 0;
+      }
+      if (Math.abs(this.vel.y) < threshold) {
+        this.vel.y = 0;
+      }
+      if (Math.abs(this.rotationVel) < threshold) {
+        this.rotationVel = 0;
+      }
+    }
+    boundToCanvas() {
+      this.pos.x = Math.max(10, Math.min(canvas.entity.width, this.pos.x));
+      this.pos.y = Math.max(10, Math.min(canvas.entity.height, this.pos.y));
+    }
+    draw() {
+      ctx.entity.save();
+      ctx.entity.globalAlpha = this.alpha;
+      ctx.entity.translate(this.pos.x, this.pos.y);
+      ctx.entity.rotate(this.rotation);
+      ctx.entity.drawImage(this.image, this.frames[this.status] * this.size.x, 0, this.size.x, this.size.y, -this.size.x / 2, -this.size.y / 2, this.size.x, this.size.y);
+      ctx.entity.restore();
+    }
+    showScore() {
+      this.scoreDisplay.innerText = this.score;
+      this.scoreDisplayEnd.innerText = `Kill: ${this.score}`;
+    }
+    showPods() {
+      const show = () => {
+        this.errorScore.innerText = Pod.errorScore;
+        this.podDisplay.innerText = Pod.count ? Pod.count : 0;
+      };
+      show();
+      setInterval(() => show(), 1e3);
+    }
+    addControls() {
+      window.addEventListener("keydown", (e) => {
+        switch (e.key) {
+          case "ArrowUp":
+            this.boost({ direction: "forwards" });
+            break;
+          case "ArrowDown":
+            this.boost({ direction: "backwards" });
+            break;
+          case "ArrowLeft":
+            this.turn({ direction: "left" });
+            break;
+          case "ArrowRight":
+            this.turn({ direction: "right" });
+            break;
+          case " ":
+            this.shoot();
+            break;
+        }
+      });
+      window.addEventListener("keyup", (e) => {
+        const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+        if (keys.includes(e.key)) {
+          this.status = "idle";
+        }
+      });
+    }
+    shoot() {
+      if (this.destroyed)
+        return;
+      new Lazer({
+        pos: { ...this.pos },
+        initialVel: { ...this.vel },
+        rotation: this.rotation
+      });
+    }
+    turn({ direction }) {
+      if (this.destroyed)
+        return;
+      this.status = `turn_${direction}`;
+      const sign = direction == "right" ? 1 : -1;
+      this.rotationForce = sign * this.rotationMaximalForce;
+    }
+    boost({ direction }) {
+      if (this.destroyed)
+        return;
+      this.status = `boost_${direction}`;
+      const sign = direction == "forwards" ? 1 : -1;
+      this.force = {
+        x: sign * this.maximalForce * Math.cos(this.rotation),
+        y: sign * this.maximalForce * Math.sin(this.rotation)
+      };
+    }
+    reset() {
+      this.score = 0;
+      this.showScore();
+      this.destroyed = false;
+      this.status = "idle";
+      this.rotation = 0;
+      this.rotationVel = 0;
+      this.vel = { x: 0, y: 0 };
+      this.alpha = 1;
+    }
+  };
+
+  // src/js/Stars.js
+  var Stars = class {
+    constructor() {
+      this.sizes = ["1", "2", "3"];
+      this.list = { 1: [], 2: [], 3: [] };
+      this.number = { 1: 3e3, 2: 1e3, 3: 700 };
+      this.parallax = { 1: 0.75, 2: 0.8, 3: 0.85 };
+      this.alpha = { 1: 0.5, 2: 0.7, 3: 0.8 };
+      this.color = "rgb(200, 179, 79)";
+      this.scale = 1;
+      this.scaleVel = 25e-5;
+      this.updateCanvas({
+        x: canvas.entity.width / 2,
+        y: canvas.entity.height / 2
+      });
+    }
+    generate() {
+      for (const size of this.sizes) {
+        this.list[size] = [];
+        for (let i = 0; i < this.number[size]; i++) {
+          const x = randInt(0, canvas[`star${size}`].width);
+          const y = randInt(0, canvas[`star${size}`].height);
+          this.list[size].push({ x, y });
+        }
+      }
+    }
+    draw() {
+      for (const size of this.sizes) {
+        clearCanvas(`star${size}`);
+        ctx[`star${size}`].fillStyle = this.color;
+        ctx[`star${size}`].globalAlpha = this.alpha[size];
+        this.list[size].forEach(({ x, y }) => {
+          ctx[`star${size}`].beginPath();
+          ctx[`star${size}`].arc(x, y, size / 2, 0, 2 * Math.PI);
+          ctx[`star${size}`].fill();
+        });
+      }
+    }
+    update(ship) {
+      this.updateCanvas(ship.pos);
+      this.updateScale();
+    }
+    updateScale() {
+      this.scale += this.scaleVel;
+      if (this.scale > 1.7 || this.scale < 1) {
+        this.scaleVel *= -1;
+      }
+    }
+    updateCanvas(pos) {
+      for (const size of this.sizes) {
+        const offset = {
+          x: -this.parallax[size] * pos.x,
+          y: -this.parallax[size] * pos.y
+        };
+        canvas[`star${size}`].style.transform = `translateX(${offset.x}px)translateY(${offset.y}px)scale(${this.scale})`;
+      }
+    }
+  };
+
+  // src/js/main.js
+  makeCanvasesFullScreen();
+  showScreen("loading");
+  preloadImages(() => {
+    showScreen("start");
+    const stars = new Stars();
+    const ship = new SpaceShip();
+    let gameRunning = false;
+    stars.generate();
+    stars.draw();
+    window.addEventListener("keydown", (e) => {
+      if (e.key == "Enter") {
+        if (ship.destroyed) {
+          hideScreen();
+          Pod.removeAll();
+          ship.reset();
+        } else if (gameRunning) {
+          showScreen("pause");
+          gameRunning = false;
+          Pod.stopGenerating();
+        } else if (!gameRunning) {
+          hideScreen();
+          gameRunning = true;
+          Pod.startGenerating();
+          ship.showScore();
+          ship.showPods();
+          gameLoop();
+        }
+      }
+    });
+    window.addEventListener("resize", debounce(() => {
+      makeCanvasesFullScreen();
+      stars.generate();
+      stars.draw();
+    }, 150));
+    function gameLoop() {
+      clearCanvas("entity");
+      [...Lazer.list, ...Pod.list, ship, stars].forEach((obj) => obj.update(ship));
+      [...Lazer.list, ...Pod.list, ship].forEach((obj) => obj.draw());
+      if (gameRunning)
+        requestAnimationFrame(gameLoop);
+    }
+  });
+})();
 //# sourceMappingURL=bundle.js.map

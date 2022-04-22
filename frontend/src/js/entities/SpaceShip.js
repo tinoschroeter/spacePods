@@ -39,6 +39,7 @@ export class SpaceShip {
     this.scoreDisplay = document.getElementById("scoreDisplay");
     this.podDisplay = document.getElementById("podDisplay");
     this.scoreDisplayEnd = document.getElementById("scoreDisplayEnd");
+    this.errorScore = document.getElementById("errorScore");
     this.addControls();
   }
 
@@ -105,13 +106,15 @@ export class SpaceShip {
   }
 
   showScore() {
-    this.scoreDisplay.innerText = `Kill: ${this.score}`;
+    this.scoreDisplay.innerText = this.score;
     this.scoreDisplayEnd.innerText = `Kill: ${this.score}`;
   }
 
   showPods() {
-    const show = () =>
-      (this.podDisplay.innerText = Pod.count ? `Pods:  ${Pod.count}` : `Pods:  0`);
+    const show = () => {
+      this.errorScore.innerText = Pod.errorScore;
+      this.podDisplay.innerText = Pod.count ? Pod.count : 0;
+    };
     show();
     setInterval(() => show(), 1000);
   }

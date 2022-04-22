@@ -1,0 +1,9 @@
+#errorScore {
+    position: fixed;
+    color: #FFA500;
+    top: 68px;
+    left: 15px;
+    font-size: 20px;
+    z-index: 30;
+    opacity: 0.7;
+}

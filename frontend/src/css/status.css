@@ -1,0 +1,17 @@
+table {
+  border-radius: 6px;
+
+}
+th,
+td {
+  color: black;
+  background-color: #ffa210;
+  font-size: 20px;
+  padding: 8px;
+  text-align: center;
+  font-weight: bold;
+  z-index: 30;
+  opacity: 0.7;
+  border: 3px solid black;
+  border-collapse:separate;
+}

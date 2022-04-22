@@ -1,6 +1,6 @@
-@import "./general.css";
 @import "./canvas.css";
+@import "./general.css";
 @import "./overlay.css";
+@import "./status.css";
 @import "./screens.css";
-@import "./score.css";
-@import "./pods.css";
+@import "./box.css";

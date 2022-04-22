@@ -8,7 +8,7 @@ export class Pod {
 
   static counts = 0;
 
-  static api = "/api/pods";
+  static api = "https://spacepod.tino.sh/api/pods";
 
   static SIZE = {
     m: 64,
@@ -27,6 +27,8 @@ export class Pod {
 
   static interval = null;
 
+  static errorScore = 0;
+
   static removeAll() {
     Pod.list = [];
   }
@@ -39,7 +41,10 @@ export class Pod {
           Pod.count = data.length;
           data.forEach((item) => new Pod(item.name));
         })
-        .catch((e) => console.error(e));
+        .catch((e) => {
+          Pod.errorScore++;
+          console.error(e);
+        });
     }, frequency);
   }
 
@@ -164,7 +169,10 @@ export class Pod {
     })
       .then((res) => res.json())
       .then((data) => console.log(data))
-      .catch((e) => console.error(e));
+      .catch((e) => {
+        Pod.errorScore++;
+        console.error(e);
+      });
     this.remove();
   }
 
