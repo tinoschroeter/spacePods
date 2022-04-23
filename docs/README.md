@@ -11,6 +11,8 @@ This project is meant to learn about **chaos engineering**, **readinessProbe**, 
 
 The application consists of a **nodejs backend** and a frontend written in **JavaScript**.
 
+==frontent is an adapted version of [spaceship-parallax](https://github.com/ScriptRaccoon/spaceship-parallax)== :heart:
+
 The backend has two entry points, one to display all pods in a namespace and one to delete pods via the
 the Kubernetes API.
 
