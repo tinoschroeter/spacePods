@@ -14,6 +14,7 @@ spec:
       labels:
         app: spacepods-backend
     spec:
+      serviceAccountName: api-service-account
       containers:
       - name: spacepods-backend
         image: registry.tino.sh/spacePods-backend
