@@ -18,7 +18,7 @@ export class Lazer {
 
   draw() {
     ctx.entity.save();
-    ctx.entity.fillStyle = "green";
+    ctx.entity.fillStyle = "blue";
     ctx.entity.globalAlpha = 0.8;
     ctx.entity.translate(this.pos.x, this.pos.y);
     ctx.entity.rotate(this.rotation);
@@ -47,7 +47,7 @@ export class Lazer {
   }
 
   remove() {
-    Lazer.list = Lazer.list.filter((l) => l != this);
+    Lazer.list = Lazer.list.filter((laser) => laser != this);
   }
 
   destroyPod(ship) {
@@ -57,6 +57,7 @@ export class Lazer {
         ship.score += asteroid.score;
         ship.showScore();
         this.remove();
+        Pod.deletePod(asteroid.podName)
       }
     });
   }

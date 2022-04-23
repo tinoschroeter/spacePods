@@ -8,7 +8,7 @@ export class Pod {
 
   static counts = 0;
 
-  static api = "https://spacepod.tino.sh/api/pods";
+  static api = "/api/pods";
 
   static SIZE = {
     m: 64,
@@ -38,8 +38,12 @@ export class Pod {
       fetch(Pod.api)
         .then((res) => res.json())
         .then((data) => {
-          Pod.count = data.length;
-          data.forEach((item) => new Pod(item.name));
+          Pod.count = data.items.length;
+          // data.items.forEach((item) =>
+          //   console.log(`${item.metadata.name} ${item.status.phase}`)
+          // );
+
+          data.items.forEach((item) => new Pod(item.metadata.name));
         })
         .catch((e) => {
           Pod.errorScore++;
@@ -116,7 +120,7 @@ export class Pod {
       this.vel = { x: 0, y: 0 };
       this.size *= 0.8;
       if (this.size <= 1) {
-        this.destroy();
+        this.remove();
       }
     }
     //this.destroyShip(ship);
@@ -125,7 +129,6 @@ export class Pod {
 
   draw() {
     //console.log(Pod.list)
-    //console.log(`x: ${this.pos.x} y: ${this.pos.y}`)
     ctx.entity.save();
     ctx.entity.translate(this.drawPos.x, this.drawPos.y);
     ctx.entity.drawImage(
@@ -160,11 +163,11 @@ export class Pod {
   }
 
   remove() {
-    Pod.list = Pod.list.filter((a) => a != this);
+    Pod.list = Pod.list.filter((pod) => pod != this);
   }
 
-  destroy() {
-    fetch(`${Pod.api}/${this.podName}`, {
+  static deletePod(podName) {
+    fetch(`${Pod.api}/${podName}`, {
       method: "DELETE",
     })
       .then((res) => res.json())
@@ -173,7 +176,6 @@ export class Pod {
         Pod.errorScore++;
         console.error(e);
       });
-    this.remove();
   }
 
   destroyShip(ship) {
