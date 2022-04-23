@@ -7,6 +7,7 @@ app.use(morgan("combined"));
 app.use(cors());
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+const namespace = process.env.NAMESPACE || "spacepods";
 
 const k8s = require("@kubernetes/client-node");
 const fetch = require("node-fetch");
@@ -17,9 +18,11 @@ kc.loadFromDefault();
 const opts = {};
 kc.applyToRequest(opts);
 
+app.get("/healthz", (req, res) => res.send("ok"));
+
 app.get("/api/pods", (req, res) => {
   fetch(
-    `${kc.getCurrentCluster().server}/api/v1/namespaces/spacepods/pods`,
+    `${kc.getCurrentCluster().server}/api/v1/namespaces/${namespace}/pods`,
     opts
   )
     .then((res) => res.json())
@@ -35,7 +38,9 @@ app.delete("/api/pods/:id", (req, res) => {
   if (id) {
     const options = { ...opts, method: "DELETE" };
     fetch(
-      `${kc.getCurrentCluster().server}/api/v1/namespaces/spacepods/pods/${id}`,
+      `${
+        kc.getCurrentCluster().server
+      }/api/v1/namespaces/${namespace}/pods/${id}`,
       options
     )
       .then((res) => res.json())
