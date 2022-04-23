@@ -5,7 +5,7 @@ metadata:
     app: spacepods-backend
   name: spacepods-backend
 spec:
-  replicas: 6
+  replicas: 14
   selector:
     matchLabels:
       app: spacepods-backend
@@ -25,3 +25,18 @@ spec:
           limits:
             memory: "64Mi"
             cpu: "100m"
+        readinessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          failureThreshold: 5
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 120
+          periodSeconds: 20
+          failureThreshold: 1
+
