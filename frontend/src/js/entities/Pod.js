@@ -38,9 +38,11 @@ export class Pod {
       fetch(Pod.api)
         .then((res) => res.json())
         .then((data) => {
-          Pod.count = data.items.length;
-          // data.items.forEach((item) =>
-          //   console.log(`${item.metadata.name} ${item.status.phase}`)
+          Pod.count = data.items.filter(
+            (item) => item.status.conditions[1].status === "True"
+          ).length;
+          //data.items.forEach((item) =>
+          //   console.log(`${item.metadata.name} Ready" ${item.status.conditions[1].status}`)
           // );
 
           data.items.forEach((item) => new Pod(item.metadata.name));
