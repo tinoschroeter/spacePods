@@ -45,11 +45,12 @@ app.delete("/api/pods/:id", (req, res) => {
     )
       .then((res) => res.json())
       .then((data) => {
-        return res.json(data);
+        res.json(data);
       })
       .catch((error) => res.status(500).json({ error }));
+  } else {
+    res.status(400).json({ error: "user error" });
   }
-  res.status(400).json({ error: "user error" });
 });
 
 const port = process.env.PORT || 3000;
