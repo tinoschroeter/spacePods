@@ -1,42 +1,47 @@
 .screen {
-    position: fixed;
-    inset: 0;
-    z-index: 100;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-size: 30px;
-    opacity: 0;
-    transition: opacity 200ms ease;
-    pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 30px;
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
 }
 
 .screen.visible {
-    opacity: 1;
+  opacity: 1;
 }
 
 .screen p {
-    margin: 5px 0px;
+  margin: 5px 0px;
 }
 
 h1,
 h2 {
-    font-size: 10vw;
-    text-transform: uppercase;
-    font-weight: 300;
+  font-size: 10vw;
+  text-transform: uppercase;
+  font-weight: 300;
 }
 
 h1 {
-    color: yellow;
-    margin-bottom: 3vw;
-    text-shadow: 0px 0px 20px #fff6;
+  color: yellow;
+  margin-bottom: 3vw;
+  text-shadow: 0px 0px 20px #fff6;
 }
 
 h2 {
-    color: red;
+  color: red;
 }
 
 h3 {
-    margin-bottom: 5vw;
+  margin-bottom: 5vw;
+}
+h4 {
+  font-size: 2vw;
+  opacity: 0.8;
+  text-shadow: 0px 0px 25px yellow;
 }
