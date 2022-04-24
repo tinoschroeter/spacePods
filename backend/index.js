@@ -33,8 +33,6 @@ app.get("/api/pods", (req, res) => {
 
 app.delete("/api/pods/:id", (req, res) => {
   const { id } = req.params;
-  console.log("id: ", id);
-  console.log("req.params: ", req.params);
   if (id) {
     const options = { ...opts, method: "DELETE" };
     fetch(
@@ -45,7 +43,7 @@ app.delete("/api/pods/:id", (req, res) => {
     )
       .then((res) => res.json())
       .then((data) => {
-        res.json(data);
+        res.json({ kill: data.metadata.name });
       })
       .catch((error) => res.status(500).json({ error }));
   } else {
