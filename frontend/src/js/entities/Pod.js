@@ -41,11 +41,12 @@ export class Pod {
           Pod.count = data.items.filter(
             (item) => item.status.conditions[1].status === "True"
           ).length;
-          //data.items.forEach((item) =>
-          //   console.log(`${item.metadata.name} Ready" ${item.status.conditions[1].status}`)
-          // );
 
-          data.items.forEach((item) => new Pod(item.metadata.name));
+          data.items.forEach(
+            (item) =>
+              item.status.conditions[1].status === "True" &&
+              new Pod(item.metadata.name)
+          );
         })
         .catch((e) => {
           Pod.errorScore++;
