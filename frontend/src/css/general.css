@@ -12,3 +12,9 @@ body {
     font-family: Consolas, monospace;
     color: white;
 }
+#github {
+  position: fixed;
+  z-index: 200;
+  opacity: 0.8;
+  right: 0;
+}
