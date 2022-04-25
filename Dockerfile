@@ -4,9 +4,8 @@ FROM node:16.2.0-stretch AS builder
 WORKDIR /srv
 COPY frontend .
 
-RUN npm install
-    # && \
-    #npm run build
+RUN npm install && \
+    npm run build
 
 # frontend
 FROM nginx:1.21.3-alpine AS frontend
