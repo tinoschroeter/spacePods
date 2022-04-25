@@ -9,7 +9,7 @@ This project is meant to learn about **chaos engineering** :see_no_evil:, **read
 
 ![im2](https://raw.githubusercontent.com/tinoschroeter/spacePods/master/docs/spacePods2.png)
 
-The application consists of a **nodejs backend** and a frontend written in **JavaScript**.
+The application consists of a **nodejs backend** and a frontend written in **JavaScript**. [Try it out](https://spacepod.tino.sh/)
 
 > frontent is an adapted version of [spaceship-parallax](https://github.com/ScriptRaccoon/spaceship-parallax) by [ScriptRaccoon](https://github.com/ScriptRaccoon) :heart:
 
