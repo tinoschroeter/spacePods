@@ -27,16 +27,16 @@ spec:
             cpu: "100m"
         readinessProbe:
           httpGet:
-            path: /healthz
+            path: /api/pods
             port: 3000
           initialDelaySeconds: 60
-          periodSeconds: 20
-          failureThreshold: 5
+          periodSeconds: 30
+          failureThreshold: 6
         livenessProbe:
           httpGet:
-            path: /healthz
+            path: /api/pods
             port: 3000
           initialDelaySeconds: 120
-          periodSeconds: 20
-          failureThreshold: 1
+          periodSeconds: 30
+          failureThreshold: 3
 
