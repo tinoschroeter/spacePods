@@ -38,6 +38,19 @@ kc.loadFromDefault();
 const opts = {};
 kc.applyToRequest(opts);
 
+app.get("/healthz", (req, res) => {
+  fetch(
+    `${kc.getCurrentCluster().server}/api/v1/namespaces/${namespace}/pods`,
+    opts
+  ).then((data) => {
+    if (data.status !== 200) {
+      return res.status(500).end();
+    }
+    res.send("ok");
+  });
+});
+
+app.get("/api", (req, res) => res.send("ok"));
 app.get("/api/pods", (req, res) => {
   fetch(
     `${kc.getCurrentCluster().server}/api/v1/namespaces/${namespace}/pods`,

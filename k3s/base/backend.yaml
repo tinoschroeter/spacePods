@@ -21,22 +21,21 @@ spec:
         resources:
           requests:
             memory: "50Mi"
-            cpu: "30m"
-          limits:
-            memory: "64Mi"
             cpu: "100m"
+          limits:
+            memory: "164Mi"
+            cpu: "200m"
         readinessProbe:
           httpGet:
-            path: /api/pods
+            path: /healthz
             port: 3000
           initialDelaySeconds: 60
           periodSeconds: 30
           failureThreshold: 6
         livenessProbe:
           httpGet:
-            path: /api/pods
+            path: /healthz
             port: 3000
-          initialDelaySeconds: 120
-          periodSeconds: 30
-          failureThreshold: 3
-
+          initialDelaySeconds: 90
+          periodSeconds: 10
+          failureThreshold: 2
