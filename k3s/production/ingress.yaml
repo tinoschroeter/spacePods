@@ -18,9 +18,6 @@ spec:
             name: spacepods-frontend-service
             port:
               number: 80
-  - host: spacepod.tino.sh
-    http:
-      paths:
       - pathType: Prefix
         path: /api
         backend:
