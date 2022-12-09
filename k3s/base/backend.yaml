@@ -5,7 +5,7 @@ metadata:
     app: spacepods-backend
   name: spacepods-backend
 spec:
-  replicas: 14
+  replicas: 4
   selector:
     matchLabels:
       app: spacepods-backend
