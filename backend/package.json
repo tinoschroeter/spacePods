@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@kubernetes/client-node": "^0.16.3",
+    "@kubernetes/client-node": "^0.18.1",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "express-prometheus-middleware": "^1.2.0",
