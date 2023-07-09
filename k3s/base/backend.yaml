@@ -5,7 +5,7 @@ metadata:
     app: spacepods-backend
   name: spacepods-backend
 spec:
-  replicas: 4
+  replicas: 12
   selector:
     matchLabels:
       app: spacepods-backend
@@ -16,26 +16,26 @@ spec:
     spec:
       serviceAccountName: api-service-account
       containers:
-      - name: spacepods-backend
-        image: registry.tino.sh/spacePods-backend
-        resources:
-          requests:
-            memory: "50Mi"
-            cpu: "100m"
-          limits:
-            memory: "250Mi"
-            cpu: "200m"
-        readinessProbe:
-          httpGet:
-            path: /healthz
-            port: 3000
-          initialDelaySeconds: 60
-          periodSeconds: 30
-          failureThreshold: 6
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 3000
-          initialDelaySeconds: 90
-          periodSeconds: 10
-          failureThreshold: 2
+        - name: spacepods-backend
+          image: registry.tino.sh/spacePods-backend
+          resources:
+            requests:
+              memory: "5Mi"
+              cpu: "10m"
+            limits:
+              memory: "250Mi"
+              cpu: "200m"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 3000
+            initialDelaySeconds: 90
+            periodSeconds: 10
+            failureThreshold: 2

@@ -5,7 +5,7 @@ metadata:
     app: spacepods-frontend
   name: spacepods-frontend
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: spacepods-frontend
@@ -15,12 +15,12 @@ spec:
         app: spacepods-frontend
     spec:
       containers:
-      - name: spacepods-frontend
-        image: registry.tino.sh/spacePods-frontend
-        resources:
-          requests:
-            memory: "50Mi"
-            cpu: "30m"
-          limits:
-            memory: "64Mi"
-            cpu: "100m"
+        - name: spacepods-frontend
+          image: registry.tino.sh/spacePods-frontend
+          resources:
+            requests:
+              memory: "5Mi"
+              cpu: "3m"
+            limits:
+              memory: "64Mi"
+              cpu: "100m"
