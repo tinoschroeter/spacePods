@@ -1,6 +1,5 @@
 # Space Pods :vulcan_salute:
 
-[![Build Status](https://jenkins.tino.sh/buildStatus/icon?job=spacePods%2Fmaster)](https://jenkins.tino.sh/job/spacePods/job/master/)
 ![last-commit](https://img.shields.io/github/last-commit/tinoschroeter/spacePods.svg?style=flat)
 
 > Navigate a Spaceship through Kubernetes and shoot Pods :rocket:
@@ -22,6 +21,5 @@ When a lot of pods are fired, you can see it very well in the increasing error r
 
 :wrench: In the next step, by increasing the replicas and modifying readiness and liveness probe, you can decrease the
 error rates :100:.
-
 
 **May the Force be with you.** :space_invader:
