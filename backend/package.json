@@ -15,7 +15,6 @@
     "express": "^4.17.3",
     "express-prometheus-middleware": "^1.2.0",
     "express-rate-limit": "^6.4.0",
-    "morgan": "^1.10.0",
-    "node-fetch": "^2.6.7"
+    "morgan": "^1.10.0"
   }
 }

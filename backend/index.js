@@ -18,15 +18,51 @@ app.use(cors());
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 const namespace = process.env.NAMESPACE || "spacepods";
 
-const k8s = require("@kubernetes/client-node");
+let kc;
+let opts = {};
 
-const kc = new k8s.KubeConfig();
-kc.loadFromDefault();
+// Initialize Kubernetes client asynchronously
+async function initKubernetesClient() {
+  const k8s = await import("@kubernetes/client-node");
 
-const opts = {};
-kc.applyToRequest(opts);
+  kc = new k8s.KubeConfig();
+  kc.loadFromDefault();
 
-app.get("/healthz", (req, res) => {
+  // Get authentication details from kubeconfig
+  const cluster = kc.getCurrentCluster();
+  const user = kc.getCurrentUser();
+
+  // Set up headers for API requests
+  opts.headers = {};
+  opts.headers["Content-Type"] = "application/json";
+
+  // Add authentication header
+  if (user && user.token) {
+    opts.headers["Authorization"] = `Bearer ${user.token}`;
+  } else {
+    // Try to get token from service account
+    try {
+      const fs = require("fs");
+      const token = fs.readFileSync(
+        "/var/run/secrets/kubernetes.io/serviceaccount/token",
+        "utf8",
+      );
+      opts.headers["Authorization"] = `Bearer ${token}`;
+    } catch (err) {
+      console.warn("Could not load service account token:", err.message);
+    }
+  }
+
+  // Handle TLS verification
+  if (cluster && cluster.skipTLSVerify) {
+    opts.rejectUnauthorized = false;
+  }
+}
+
+// Initialize the client
+initKubernetesClient().catch(console.error);
+
+app.get("/healthz", (_req, res) => {
   fetch(
     `${kc.getCurrentCluster().server}/api/v1/namespaces/${namespace}/pods`,
     opts,
@@ -38,7 +74,7 @@ app.get("/healthz", (req, res) => {
   });
 });
 
-app.get("/api", (req, res) => res.send("ok"));
+app.get("/api", (_req, res) => res.send("ok"));
 app.get("/api/pods", (req, res) => {
   fetch(
     `${kc.getCurrentCluster().server}/api/v1/namespaces/${namespace}/pods`,
