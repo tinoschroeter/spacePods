@@ -5,7 +5,7 @@ metadata:
     app: spacepods-frontend
   name: spacepods-frontend
 spec:
-  replicas: 4
+  replicas: 6
   selector:
     matchLabels:
       app: spacepods-frontend
